@@ -4,27 +4,30 @@ import UIKit
 
 class ViewController: UIViewController
 {
-    var nasa: NasaData!
     
+
     @IBOutlet weak var min: UILabel!
     @IBOutlet weak var max: UILabel!
     @IBOutlet weak var now: UILabel!
     @IBOutlet weak var photoImage: UIImageView!
+    @IBOutlet weak var ImageTitle: UILabel!
     
-    //上傳圖片
-    func updateUI() {
-        now.text = nasa.date
-        NasaController.shared.photoImage(url: nasa.url) { (image) in
-            DispatchQueue.main.async {
-                self.photoImage.image = image
-            }
-        }
-    }
+    // 建立型別為[Photo]的物件
+    var photos = [Photo]()
+    var imageURL: URL!
+    var years = [2010-01-01, 2011-01-01, 2012-01-01, 2013-01-01, 2014-01-01, 2015-01-01, 2016-01-01, 2017-01-01, 2018-01-01, 2019-01-01, 2020-01-01,2021-01-01]
+    var timer: Timer?
+    
+    
+    
+    
+    
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        updateUI()
-
+        initPhotos()
+    
       
     }
     
@@ -72,13 +75,79 @@ class ViewController: UIViewController
         
         // 同步label年份
        now.text = (String(Int(sender.value)))
+        
+        // update imageView
+       
+        let index = Int(year) - 2010
+        showImage(index)
+        
+  
      
     }
     
+    
+    // 利用API送出指定url獲取Data後解析
+    func fetchData() {
+        // 抓取2010-2020年間的Data
+        for year in years {
+            let url = "https://api.nasa.gov/planetary/apod?api_key=4zyFSDdTOuPXrq2L5RkjbKMElXdsFny0LGmGjXPd&date= \(years)"
+            let index = (year - 2010)
+            if let url = URL(string: url) {
+                    // 抓取Data
+                    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                        // 解析JSON
+                        if let data = data, let searchData = try? JSONDecoder().decode(SearchData.self, from: data) {
+                            print("index:\(index)", year, searchData.photos.photo)
+                            self.photos.remove(at: index)
+                            self.photos.insert(contentsOf: searchData.photos.photo, at: index)
+                            self.showImage(0)
+                        }
+                        print(self.photos)
+                    }
+                    // 啟動任務
+                    task.resume()
+            }
+        }
     }
     
+    // 利用回傳的Data重組url後download image
+    func downloadImage(url: URL, handler: @escaping (UIImage?) -> ()) {
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if let data = data, let image = UIImage(data: data) {
+                handler(image)
+            } else {
+                handler(nil)
+            }
+        }
+        task.resume()
+    }
     
+    func showImage(_ index: Int) {
+        let photo = photos[index]
+        imageURL = photo.url
+        downloadImage(url: imageURL) { (image) in
+            if self.imageURL == photo.url, let image = image {
+                DispatchQueue.main.async {
+                    self.photoImage.image = image
+                }
+            }
+        }
+    }
     
+ func initPhotos() {
+    photos = [Photo](repeating: Photo( date: "", title: ""), count: years.count)
+        print(photos)
+   }
+   
+   
+ 
+    }
+   
+  
     
     
   
+    
+    
+  
+

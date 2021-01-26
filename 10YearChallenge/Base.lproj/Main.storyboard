@@ -67,12 +67,20 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zIr-eY-QLQ">
+                                <rect key="frame" x="141" y="527" width="235" height="66"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="39"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <connections>
                         <outlet property="DateSlider" destination="Q2L-6J-1YX" id="JUe-vC-q4a"/>
+                        <outlet property="ImageTitle" destination="zIr-eY-QLQ" id="ckq-fR-1X9"/>
                         <outlet property="datePicker" destination="4IF-hO-sfa" id="GpM-hE-oi0"/>
                         <outlet property="max" destination="0uj-Ev-jlm" id="tnG-Un-SAX"/>
                         <outlet property="min" destination="BIL-Dq-XT0" id="hTk-eN-Cds"/>
